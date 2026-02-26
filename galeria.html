@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inspiración Bento | Luces Led Medellín</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Iconos -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configuración (Misma que Home) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#050505',
+                            dark: '#0a0a0a',
+                            pink: 'hsl(326.96, 100%, 72.94%)',
+                            pinkdim: 'hsl(326.96, 100%, 40%)',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        display: ['Orbitron', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'neon': '0 0 10px theme("colors.brand.pink"), 0 0 20px theme("colors.brand.pinkdim")',
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px)",
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            overflow-x: hidden;
+            background-image: var(--tw-bg-grid-pattern);
+            background-size: 50px 50px;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: hsl(326.96, 100%, 72.94%); border-radius: 4px; }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Estilo general para las celdas Bento */
+        .bento-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem; /* rounded-xl */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(255, 117, 188, 0.05);
+            transform: scale(1.02);
+        }
+
+        .bento-item:hover {
+            transform: scale(1.02);
+            border-color: hsl(326.96, 100%, 72.94%);
+            box-shadow: 0 0 30px rgba(255, 117, 188, 0.2);
+        }
+
+        .bento-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        
+        .bento-item:hover .bento-image {
+            transform: scale(1.05);
+        }
+        
+        /* Definición de tamaños de celda */
+        .span-2-col {
+            grid-column: span 2 / span 2;
+        }
+        .span-2-row {
+            grid-row: span 2 / span 2;
+        }
+
+        /* Estilos responsivos para el grid */
+        @media (max-width: 768px) {
+            .span-2-col, .span-2-row {
+                grid-column: span 1 / span 1; /* Todos ocupan 1 columna en móvil */
+                grid-row: span 1 / span 1; /* Todos ocupan 1 fila en móvil */
+            }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-pink selection:text-black">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 transition-all duration-300 glass border-b-0 border-white/10" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex-shrink-0 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <span class="font-display font-bold text-2xl tracking-wider text-white">
+                        LUCES LED <span class="text-brand-pink drop-shadow-[0_0_5px_rgba(255,117,188,0.8)]">MED</span>
+                    </span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="index.html" class="hover:text-brand-pink transition-colors duration-300 text-sm font-medium tracking-wide">INICIO</a>
+                        <a href="productos.html" class="hover:text-brand-pink transition-colors duration-300 text-sm font-medium tracking-wide">PRODUCTOS</a>
+                        <a href="galeria.html" class="hover:text-brand-pink transition-colors duration-300 text-sm font-medium tracking-wide">GALERÍA</a>
+                        <a href="quienes-somos.html" class="hover:text-brand-pink transition-colors duration-300 text-sm font-medium tracking-wide">NOSOTROS</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Galería Inspiración -->
+    <section class="pt-32 pb-16 text-center">
+        <div class="max-w-4xl mx-auto px-4">
+            <h1 class="text-5xl md:text-6xl font-display font-black text-white mb-4">
+                MOMENTOS DE <span class="text-brand-pink">INSPIRACIÓN</span>
+            </h1>
+            <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                Una colección curada de nuestros mejores proyectos. Haz *scroll* para encontrar la luz perfecta para tu espacio.
+            </p>
+        </div>
+    </section>
+
+    <!-- Grid Bento Box -->
+    <section class="pb-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[250px] md:auto-rows-[200px]">
+
+                <!-- 1. Proyecto Destacado (2 columnas) - Setup Gamer -->
+                <div class="bento-item span-2-col flex flex-col justify-end p-6 bg-brand-dark hover:bg-brand-dark/80">
+                    <img src="7.jpg" onerror="this.onerror=null;this.src='https://placehold.co/1400x400/0a0a0a/ff75bc?text=SETUP+GAMER+MASTER';" alt="Proyecto Setup Gamer Destacado" class="bento-image absolute inset-0 -z-10 brightness-75">
+                    <div class="relative z-10">
+                        <span class="text-xs font-bold text-brand-pink uppercase tracking-widest">PROYECTO PREMIUM</span>
+                        <h3 class="text-3xl font-display font-bold mt-1">Sinfonía RGB: Estudio del Streamer</h3>
+                        <p class="text-base text-gray-300 max-w-xl hidden sm:block">Instalación de LEDs invisibles y direccionables, controlados por voz y sincronizados con el audio.</p>
+                    </div>
+                </div>
+
+                <!-- 2. Tarjeta de Info/CTA (Simple) -->
+                <div class="bento-item glass flex flex-col items-center justify-center p-6 text-center">
+                    <i data-lucide="sparkles" class="w-8 h-8 text-brand-pink mb-3"></i>
+                    <h3 class="text-xl font-bold">¿Tienes una idea?</h3>
+                    <p class="text-sm text-gray-400 mb-4">Agenda una asesoría gratuita.</p>
+                    <a href="servicios.html#cotizar" class="text-brand-pink font-bold text-sm hover:text-white transition-colors">
+                        Cotizar ahora <i data-lucide="arrow-right" class="w-4 h-4 inline ml-1"></i>
+                    </a>
+                </div>
+                
+                <!-- 3. Proyecto Vertical (2 filas) - Locales Comerciales -->
+                <div class="bento-item span-2-row flex flex-col justify-end p-6 bg-brand-dark">
+                    <img src="5.jpg" onerror="this.onerror=null;this.src='https://placehold.co/400x800/0a0a0a/ff75bc?text=LOCAL+COMERCIAL';" alt="Proyecto Bar o Tienda" class="bento-image absolute inset-0 -z-10 brightness-75">
+                    <div class="relative z-10">
+                        <span class="text-xs font-bold text-white uppercase tracking-widest">COMERCIAL | TIENDA</span>
+                        <h3 class="text-2xl font-display font-bold mt-1">Impacto Visual en Fachada</h3>
+                        <p class="text-sm text-gray-300 hidden sm:block">Focos LED de alta potencia y cintas exteriores IP67.</p>
+                    </div>
+                </div>
+
+                <!-- 4. Proyecto Simple - Sala de Estar -->
+                <div class="bento-item flex flex-col justify-end p-6 bg-brand-dark">
+                    <img src="1.jpg" onerror="this.onerror=null;this.src='https://placehold.co/600x400/0a0a0a/ff75bc?text=SALA+RESIDENCIAL';" alt="Proyecto Sala Residencial" class="bento-image absolute inset-0 -z-10 brightness-75">
+                    <div class="relative z-10">
+                        <span class="text-xs font-bold text-white uppercase tracking-widest">RESIDENCIAL</span>
+                        <h3 class="text-xl font-bold mt-1">Modo Cine Automático</h3>
+                    </div>
+                </div>
+
+                <!-- 5. Proyecto Simple - Neón Decorativo -->
+                <div class="bento-item flex flex-col justify-end p-6 bg-brand-dark">
+                    <img src="2.jpg" onerror="this.onerror=null;this.src='https://placehold.co/600x400/0a0a0a/ff75bc?text=LETRERO+NEON';" alt="Letrero Neón" class="bento-image absolute inset-0 -z-10 brightness-75">
+                    <div class="relative z-10">
+                        <span class="text-xs font-bold text-white uppercase tracking-widest">NEÓN FLEX</span>
+                        <h3 class="text-xl font-bold mt-1">Mensajes Personalizados</h3>
+                    </div>
+                </div>
+
+                <!-- 6. Proyecto Destacado (2 columnas) - Cocina Moderna -->
+                <div class="bento-item span-2-col flex flex-col justify-end p-6 bg-brand-dark hover:bg-brand-dark/80">
+                    <img src="3.jpg" onerror="this.onerror=null;this.src='https://placehold.co/1400x400/0a0a0a/ff75bc?text=COCINA+INTEGRAL+LED';" alt="Proyecto Cocina Moderna" class="bento-image absolute inset-0 -z-10 brightness-75">
+                    <div class="relative z-10">
+                        <span class="text-xs font-bold text-white uppercase tracking-widest">DISEÑO DE INTERIORES</span>
+                        <h3 class="text-3xl font-display font-bold mt-1">Líneas de Luz en Cocina</h3>
+                        <p class="text-base text-gray-300 max-w-xl hidden sm:block">Iluminación bajo-gabinete y en zócalos, totalmente integrada en la arquitectura.</p>
+                    </div>
+                </div>
+                
+                <!-- 7. Métrica/Dato de Confianza (Simple) -->
+                <div class="bento-item glass flex flex-col items-center justify-center p-6 text-center">
+                    <div class="text-5xl font-display font-black text-brand-pink">500+</div>
+                    <p class="text-sm text-gray-400 mt-2">Instalaciones Exitosas</p>
+                    <p class="text-xs text-white/50">en el Valle de Aburrá</p>
+                </div>
+                
+                <!-- 8. Proyecto Simple - Espejo Baño -->
+                <div class="bento-item flex flex-col justify-end p-6 bg-brand-dark">
+                    <img src="6.jpg" onerror="this.onerror=null;this.src='https://placehold.co/600x400/0a0a0a/ff75bc?text=BAÑO+LUJOSO';" alt="Iluminación en Baño" class="bento-image absolute inset-0 -z-10 brightness-75">
+                    <div class="relative z-10">
+                        <span class="text-xs font-bold text-white uppercase tracking-widest">HOGAR</span>
+                        <h3 class="text-xl font-bold mt-1">Luz Suave en Espejos</h3>
+                    </div>
+                </div>
+
+            </div>
+            
+            <!-- CTA Final -->
+            <div class="mt-20 text-center">
+                <h3 class="text-3xl font-display font-bold text-white mb-4">¿Listo para encender tu espacio?</h3>
+                <p class="text-gray-400 mb-6">Convierte cualquiera de estas inspiraciones en tu nueva realidad.</p>
+                <a href="servicios.html#cotizar" class="px-8 py-4 bg-brand-pink text-black font-display text-lg font-bold uppercase tracking-wider hover:shadow-neon hover:scale-[1.05] transition-all duration-300 rounded-lg">
+                    Agenda tu Visita Técnica
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer Simple -->
+    <footer class="bg-black border-t border-white/10 py-8 text-center">
+        <p class="text-gray-600 text-sm">© 2024 Luces Led Medellín.</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

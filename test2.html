@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEON GALAXY — Luces del Universo</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --neon-pink: #ff00ff;
+    --neon-cyan: #00ffff;
+    --neon-green: #00ff88;
+    --neon-purple: #bf00ff;
+    --neon-orange: #ff6600;
+    --neon-yellow: #ffff00;
+    --deep-space: #020008;
+    --space-mid: #07001a;
+    --space-surface: #0d0025;
+    --card-bg: rgba(13, 0, 37, 0.7);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--deep-space);
+    color: #e0d0ff;
+    font-family: 'Rajdhani', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    width: 20px; height: 20px;
+    border: 2px solid var(--neon-cyan);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: all 0.1s ease;
+    box-shadow: 0 0 15px var(--neon-cyan), inset 0 0 10px rgba(0,255,255,0.2);
+  }
+  .cursor-dot {
+    width: 5px; height: 5px;
+    background: var(--neon-pink);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px var(--neon-pink);
+  }
+
+  /* STARS CANVAS */
+  #stars-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* NEBULA BLOBS */
+  .nebula {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+    animation: nebula-drift 20s ease-in-out infinite alternate;
+  }
+  .nebula-1 { width: 600px; height: 600px; background: rgba(191,0,255,0.08); top: -200px; left: -100px; }
+  .nebula-2 { width: 500px; height: 500px; background: rgba(0,255,255,0.06); bottom: 100px; right: -100px; animation-delay: -10s; }
+  .nebula-3 { width: 400px; height: 400px; background: rgba(255,0,255,0.05); top: 40%; left: 40%; animation-delay: -5s; }
+
+  @keyframes nebula-drift {
+    0% { transform: translate(0,0) scale(1); }
+    100% { transform: translate(40px, 30px) scale(1.1); }
+  }
+
+  /* LAYOUT */
+  .container { max-width: 1300px; margin: 0 auto; padding: 0 30px; position: relative; z-index: 2; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; width: 100%;
+    z-index: 100;
+    padding: 20px 0;
+    background: linear-gradient(to bottom, rgba(2,0,8,0.95), transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0,255,255,0.1);
+  }
+  .nav-inner {
+    max-width: 1300px; margin: 0 auto; padding: 0 30px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.6rem;
+    font-weight: 900;
+    letter-spacing: 4px;
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+    position: relative;
+  }
+  .logo::after {
+    content: 'NEON GALAXY';
+    position: absolute;
+    left: 0; top: 0;
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: blur(8px);
+    opacity: 0.5;
+  }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(200,180,255,0.7);
+    text-decoration: none;
+    transition: color 0.3s, text-shadow 0.3s;
+  }
+  .nav-links a:hover {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 15px var(--neon-cyan);
+  }
+  .nav-cta {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    padding: 10px 24px;
+    border: 1px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    text-transform: uppercase;
+  }
+  .nav-cta::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0,255,255,0.15), transparent);
+    transition: left 0.4s;
+  }
+  .nav-cta:hover::before { left: 100%; }
+  .nav-cta:hover { box-shadow: 0 0 20px rgba(0,255,255,0.4), inset 0 0 20px rgba(0,255,255,0.05); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding-top: 100px;
+  }
+  .hero-content { max-width: 700px; }
+  .hero-badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 4px;
+    color: var(--neon-green);
+    border: 1px solid rgba(0,255,136,0.4);
+    padding: 6px 16px;
+    margin-bottom: 30px;
+    animation: pulse-border 2s ease-in-out infinite;
+  }
+  @keyframes pulse-border {
+    0%,100% { border-color: rgba(0,255,136,0.4); box-shadow: 0 0 0 rgba(0,255,136,0); }
+    50% { border-color: rgba(0,255,136,0.9); box-shadow: 0 0 15px rgba(0,255,136,0.3); }
+  }
+  .hero h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -2px;
+    margin-bottom: 10px;
+  }
+  .hero h1 .line1 {
+    display: block;
+    background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero h1 .line2 {
+    display: block;
+    background: linear-gradient(135deg, var(--neon-cyan) 0%, var(--neon-pink) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 30px rgba(0,255,255,0.5));
+    animation: text-glow 3s ease-in-out infinite alternate;
+  }
+  @keyframes text-glow {
+    from { filter: drop-shadow(0 0 20px rgba(0,255,255,0.5)); }
+    to { filter: drop-shadow(0 0 40px rgba(255,0,255,0.7)); }
+  }
+  .hero h1 .line3 {
+    display: block;
+    font-size: 0.45em;
+    letter-spacing: 10px;
+    background: linear-gradient(90deg, var(--neon-purple), var(--neon-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-top: 8px;
+  }
+  .hero-desc {
+    font-size: 1.15rem;
+    font-weight: 300;
+    color: rgba(200,180,255,0.65);
+    margin: 30px 0 50px;
+    line-height: 1.8;
+    max-width: 500px;
+    letter-spacing: 0.5px;
+  }
+  .hero-buttons { display: flex; gap: 20px; flex-wrap: wrap; }
+  .btn-primary {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    padding: 18px 40px;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+    color: #000;
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  }
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 40px rgba(0,255,255,0.5);
+  }
+  .btn-secondary {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    padding: 18px 40px;
+    border: 1px solid rgba(255,0,255,0.5);
+    color: var(--neon-pink);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all 0.3s;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  }
+  .btn-secondary:hover {
+    border-color: var(--neon-pink);
+    box-shadow: 0 0 30px rgba(255,0,255,0.3);
+    background: rgba(255,0,255,0.05);
+  }
+
+  /* HERO VISUAL */
+  .hero-visual {
+    position: absolute;
+    right: -50px; top: 50%;
+    transform: translateY(-50%);
+    width: 600px; height: 600px;
+    pointer-events: none;
+  }
+  .orbit-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation: orbit-spin linear infinite;
+  }
+  .ring-1 {
+    width: 300px; height: 300px;
+    border-color: rgba(0,255,255,0.2);
+    animation-duration: 8s;
+  }
+  .ring-2 {
+    width: 420px; height: 420px;
+    border-color: rgba(255,0,255,0.15);
+    animation-duration: 14s;
+    animation-direction: reverse;
+    border-style: dashed;
+  }
+  .ring-3 {
+    width: 540px; height: 540px;
+    border-color: rgba(191,0,255,0.1);
+    animation-duration: 22s;
+  }
+  @keyframes orbit-spin {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+  .orbit-dot {
+    position: absolute;
+    border-radius: 50%;
+    top: 0; left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+  }
+  .planet-core {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, rgba(0,255,255,0.6), rgba(191,0,255,0.4), rgba(255,0,255,0.3), rgba(2,0,8,0.9));
+    box-shadow:
+      0 0 60px rgba(0,255,255,0.4),
+      0 0 120px rgba(191,0,255,0.2),
+      inset 0 0 40px rgba(255,0,255,0.2);
+    animation: planet-pulse 4s ease-in-out infinite alternate;
+  }
+  @keyframes planet-pulse {
+    from { box-shadow: 0 0 60px rgba(0,255,255,0.4), 0 0 120px rgba(191,0,255,0.2); }
+    to { box-shadow: 0 0 80px rgba(0,255,255,0.6), 0 0 160px rgba(255,0,255,0.3); }
+  }
+  .orbit-dot-1 {
+    width: 12px; height: 12px;
+    background: var(--neon-cyan);
+    box-shadow: 0 0 15px var(--neon-cyan), 0 0 30px var(--neon-cyan);
+  }
+  .orbit-dot-2 {
+    width: 8px; height: 8px;
+    background: var(--neon-pink);
+    box-shadow: 0 0 12px var(--neon-pink);
+  }
+  .orbit-dot-3 {
+    width: 6px; height: 6px;
+    background: var(--neon-green);
+    box-shadow: 0 0 10px var(--neon-green);
+  }
+
+  /* SCROLL INDICATOR */
+  .scroll-hint {
+    position: absolute;
+    bottom: 40px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .scroll-hint span {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 4px;
+    color: rgba(0,255,255,0.5);
+  }
+  .scroll-line {
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, var(--neon-cyan), transparent);
+    animation: scroll-drop 1.5s ease-in-out infinite;
+  }
+  @keyframes scroll-drop {
+    0%,100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.2); }
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    position: relative; z-index: 2;
+    border-top: 1px solid rgba(0,255,255,0.1);
+    border-bottom: 1px solid rgba(0,255,255,0.1);
+    background: rgba(0,255,255,0.03);
+    padding: 30px 0;
+    margin-bottom: 100px;
+  }
+  .stats-inner {
+    max-width: 1300px; margin: 0 auto; padding: 0 30px;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 2.2rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .stat-label {
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(180,160,220,0.6);
+    margin-top: 4px;
+  }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 5px;
+    color: var(--neon-green);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::before {
+    content: '';
+    width: 30px; height: 1px;
+    background: var(--neon-green);
+    box-shadow: 0 0 8px var(--neon-green);
+  }
+
+  /* PRODUCTS */
+  .products-section { padding: 80px 0 120px; position: relative; z-index: 2; }
+  .section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 60px;
+  }
+  .section-title span {
+    display: block;
+    background: linear-gradient(135deg, #fff, rgba(200,180,255,0.8));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .section-title em {
+    font-style: normal;
+    background: linear-gradient(90deg, var(--neon-pink), var(--neon-orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20px rgba(255,0,255,0.4));
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+  }
+  .product-card {
+    background: var(--card-bg);
+    border: 1px solid;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    backdrop-filter: blur(20px);
+    cursor: none;
+  }
+  .product-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--card-glow), transparent);
+    opacity: 0.6;
+  }
+  .product-card:nth-child(1) { border-color: rgba(0,255,255,0.2); --card-glow: var(--neon-cyan); }
+  .product-card:nth-child(2) { border-color: rgba(255,0,255,0.2); --card-glow: var(--neon-pink); }
+  .product-card:nth-child(3) { border-color: rgba(0,255,136,0.2); --card-glow: var(--neon-green); }
+  .product-card:nth-child(4) { border-color: rgba(191,0,255,0.2); --card-glow: var(--neon-purple); }
+  .product-card:nth-child(5) { border-color: rgba(255,102,0,0.2); --card-glow: var(--neon-orange); }
+  .product-card:nth-child(6) { border-color: rgba(255,255,0,0.2); --card-glow: var(--neon-yellow); }
+  .product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(var(--glow-rgb), 0.15);
+    border-color: var(--card-glow);
+  }
+  .card-img {
+    height: 220px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .neon-sign {
+    font-family: 'Orbitron', monospace;
+    font-size: 2.5rem;
+    font-weight: 900;
+    position: relative;
+    z-index: 2;
+    animation: sign-flicker 5s ease-in-out infinite;
+  }
+  @keyframes sign-flicker {
+    0%,90%,100% { opacity: 1; }
+    92% { opacity: 0.8; }
+    94% { opacity: 1; }
+    96% { opacity: 0.6; }
+    98% { opacity: 1; }
+  }
+  .card-1 .neon-sign { color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan), 0 0 40px var(--neon-cyan), 0 0 80px var(--neon-cyan); }
+  .card-2 .neon-sign { color: var(--neon-pink); text-shadow: 0 0 10px var(--neon-pink), 0 0 40px var(--neon-pink), 0 0 80px var(--neon-pink); }
+  .card-3 .neon-sign { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green), 0 0 40px var(--neon-green), 0 0 80px var(--neon-green); }
+  .card-4 .neon-sign { color: var(--neon-purple); text-shadow: 0 0 10px var(--neon-purple), 0 0 40px var(--neon-purple), 0 0 80px var(--neon-purple); }
+  .card-5 .neon-sign { color: var(--neon-orange); text-shadow: 0 0 10px var(--neon-orange), 0 0 40px var(--neon-orange), 0 0 80px var(--neon-orange); }
+  .card-6 .neon-sign { color: var(--neon-yellow); text-shadow: 0 0 10px var(--neon-yellow), 0 0 40px var(--neon-yellow), 0 0 80px var(--neon-yellow); }
+
+  .card-bg-glow {
+    position: absolute;
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.2;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .card-1 .card-bg-glow { background: var(--neon-cyan); }
+  .card-2 .card-bg-glow { background: var(--neon-pink); }
+  .card-3 .card-bg-glow { background: var(--neon-green); }
+  .card-4 .card-bg-glow { background: var(--neon-purple); }
+  .card-5 .card-bg-glow { background: var(--neon-orange); }
+  .card-6 .card-bg-glow { background: var(--neon-yellow); }
+
+  .card-body { padding: 24px; }
+  .card-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .card-1 .card-tag { color: var(--neon-cyan); }
+  .card-2 .card-tag { color: var(--neon-pink); }
+  .card-3 .card-tag { color: var(--neon-green); }
+  .card-4 .card-tag { color: var(--neon-purple); }
+  .card-5 .card-tag { color: var(--neon-orange); }
+  .card-6 .card-tag { color: var(--neon-yellow); }
+
+  .card-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+  .card-desc {
+    font-size: 0.85rem;
+    color: rgba(180,160,220,0.6);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .card-footer { display: flex; align-items: center; justify-content: space-between; }
+  .card-price {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: #fff;
+  }
+  .card-price small {
+    font-size: 0.6rem;
+    color: rgba(180,160,220,0.5);
+    display: block;
+    letter-spacing: 2px;
+  }
+  .card-btn {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    padding: 10px 18px;
+    text-transform: uppercase;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+  .card-1 .card-btn { border: 1px solid var(--neon-cyan); color: var(--neon-cyan); }
+  .card-2 .card-btn { border: 1px solid var(--neon-pink); color: var(--neon-pink); }
+  .card-3 .card-btn { border: 1px solid var(--neon-green); color: var(--neon-green); }
+  .card-4 .card-btn { border: 1px solid var(--neon-purple); color: var(--neon-purple); }
+  .card-5 .card-btn { border: 1px solid var(--neon-orange); color: var(--neon-orange); }
+  .card-6 .card-btn { border: 1px solid var(--neon-yellow); color: var(--neon-yellow); }
+  .card-btn:hover { background: rgba(255,255,255,0.05); transform: scale(1.05); }
+
+  /* FEATURED SECTION */
+  .featured-section { padding: 80px 0; position: relative; z-index: 2; }
+  .featured-inner {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: center;
+  }
+  .featured-visual {
+    position: relative;
+    height: 500px;
+  }
+  .neon-frame {
+    position: absolute;
+    inset: 0;
+    border: 2px solid transparent;
+    background: linear-gradient(var(--space-surface), var(--space-surface)) padding-box,
+                linear-gradient(135deg, var(--neon-cyan), var(--neon-pink), var(--neon-purple)) border-box;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .neon-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(0,255,255,0.05) 0%, transparent 70%);
+  }
+  .big-neon-text {
+    font-family: 'Orbitron', monospace;
+    font-size: 4rem;
+    font-weight: 900;
+    text-align: center;
+    line-height: 1.2;
+    z-index: 2;
+    position: relative;
+  }
+  .big-neon-text .w1 {
+    display: block;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 20px var(--neon-cyan), 0 0 60px var(--neon-cyan), 0 0 100px rgba(0,255,255,0.5);
+    animation: big-glow-c 2s ease-in-out infinite alternate;
+  }
+  .big-neon-text .w2 {
+    display: block;
+    color: var(--neon-pink);
+    text-shadow: 0 0 20px var(--neon-pink), 0 0 60px var(--neon-pink), 0 0 100px rgba(255,0,255,0.5);
+    animation: big-glow-p 2s ease-in-out 1s infinite alternate;
+  }
+  @keyframes big-glow-c {
+    from { text-shadow: 0 0 20px var(--neon-cyan), 0 0 60px var(--neon-cyan); }
+    to { text-shadow: 0 0 30px var(--neon-cyan), 0 0 80px var(--neon-cyan), 0 0 120px rgba(0,255,255,0.4); }
+  }
+  @keyframes big-glow-p {
+    from { text-shadow: 0 0 20px var(--neon-pink), 0 0 60px var(--neon-pink); }
+    to { text-shadow: 0 0 30px var(--neon-pink), 0 0 80px var(--neon-pink), 0 0 120px rgba(255,0,255,0.4); }
+  }
+  .corner-deco {
+    position: absolute;
+    width: 30px; height: 30px;
+  }
+  .corner-deco.tl { top: -1px; left: -1px; border-top: 2px solid var(--neon-cyan); border-left: 2px solid var(--neon-cyan); }
+  .corner-deco.tr { top: -1px; right: -1px; border-top: 2px solid var(--neon-pink); border-right: 2px solid var(--neon-pink); }
+  .corner-deco.bl { bottom: -1px; left: -1px; border-bottom: 2px solid var(--neon-pink); border-left: 2px solid var(--neon-pink); }
+  .corner-deco.br { bottom: -1px; right: -1px; border-bottom: 2px solid var(--neon-cyan); border-right: 2px solid var(--neon-cyan); }
+
+  .featured-content {}
+  .featured-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 24px;
+  }
+  .featured-title span {
+    background: linear-gradient(135deg, #fff, rgba(200,180,255,0.7));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .featured-title em {
+    font-style: normal;
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .featured-desc {
+    font-size: 1rem;
+    color: rgba(180,160,220,0.65);
+    line-height: 1.9;
+    margin-bottom: 36px;
+  }
+  .feature-list { list-style: none; margin-bottom: 40px; }
+  .feature-list li {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.9rem;
+    color: rgba(200,180,255,0.8);
+    letter-spacing: 0.5px;
+  }
+  .feature-icon {
+    width: 8px; height: 8px;
+    background: var(--neon-green);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--neon-green);
+    flex-shrink: 0;
+  }
+
+  /* MARQUEE */
+  .marquee-section {
+    padding: 40px 0;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    overflow: hidden;
+    position: relative; z-index: 2;
+    background: rgba(0,255,255,0.02);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 60px;
+    animation: marquee 30s linear infinite;
+    width: max-content;
+  }
+  .marquee-item {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: flex; align-items: center; gap: 30px;
+  }
+  .marquee-item span { color: rgba(180,160,220,0.4); }
+  .marquee-item .dot { width: 6px; height: 6px; border-radius: 50%; }
+  .dot-c { background: var(--neon-cyan); box-shadow: 0 0 8px var(--neon-cyan); }
+  .dot-p { background: var(--neon-pink); box-shadow: 0 0 8px var(--neon-pink); }
+  .dot-g { background: var(--neon-green); box-shadow: 0 0 8px var(--neon-green); }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* HOW IT WORKS */
+  .process-section { padding: 100px 0; position: relative; z-index: 2; }
+  .process-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 60px;
+    position: relative;
+  }
+  .process-grid::before {
+    content: '';
+    position: absolute;
+    top: 50px; left: 12.5%; right: 12.5%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink), var(--neon-purple), var(--neon-green));
+    opacity: 0.3;
+  }
+  .process-step { padding: 0 20px; text-align: center; }
+  .step-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    color: rgba(180,160,220,0.4);
+    margin-bottom: 16px;
+  }
+  .step-icon {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 24px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem;
+    position: relative;
+  }
+  .step-1 .step-icon { background: rgba(0,255,255,0.08); border: 1px solid rgba(0,255,255,0.3); box-shadow: 0 0 30px rgba(0,255,255,0.1); }
+  .step-2 .step-icon { background: rgba(255,0,255,0.08); border: 1px solid rgba(255,0,255,0.3); box-shadow: 0 0 30px rgba(255,0,255,0.1); }
+  .step-3 .step-icon { background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.3); box-shadow: 0 0 30px rgba(0,255,136,0.1); }
+  .step-4 .step-icon { background: rgba(191,0,255,0.08); border: 1px solid rgba(191,0,255,0.3); box-shadow: 0 0 30px rgba(191,0,255,0.1); }
+  .step-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+  .step-desc {
+    font-size: 0.82rem;
+    color: rgba(180,160,220,0.55);
+    line-height: 1.7;
+  }
+
+  /* TESTIMONIALS */
+  .testimonials-section { padding: 80px 0 120px; position: relative; z-index: 2; }
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px; margin-top: 50px;
+  }
+  .testimonial-card {
+    padding: 30px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(13,0,37,0.5);
+    backdrop-filter: blur(20px);
+    position: relative;
+    transition: all 0.3s;
+  }
+  .testimonial-card::before {
+    content: '"';
+    font-family: 'Orbitron', monospace;
+    font-size: 5rem;
+    position: absolute;
+    top: -10px; left: 20px;
+    line-height: 1;
+    opacity: 0.1;
+  }
+  .testimonial-card:nth-child(1)::before { color: var(--neon-cyan); }
+  .testimonial-card:nth-child(2)::before { color: var(--neon-pink); }
+  .testimonial-card:nth-child(3)::before { color: var(--neon-green); }
+  .testimonial-card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.15); }
+  .testimonial-text {
+    font-size: 0.9rem;
+    color: rgba(200,180,255,0.75);
+    line-height: 1.8;
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+  .testimonial-author {
+    display: flex; align-items: center; gap: 14px;
+  }
+  .author-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .av-1 { background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); color: #000; }
+  .av-2 { background: linear-gradient(135deg, var(--neon-pink), var(--neon-orange)); color: #000; }
+  .av-3 { background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan)); color: #000; }
+  .author-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1px;
+  }
+  .author-role {
+    font-size: 0.7rem;
+    color: rgba(180,160,220,0.5);
+    letter-spacing: 2px;
+    margin-top: 3px;
+  }
+  .stars { color: var(--neon-yellow); font-size: 0.75rem; margin-bottom: 16px; letter-spacing: 2px; }
+
+  /* CTA SECTION */
+  .cta-section {
+    padding: 120px 0;
+    position: relative; z-index: 2;
+    text-align: center;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px; height: 400px;
+    background: radial-gradient(ellipse, rgba(0,255,255,0.05), transparent);
+    pointer-events: none;
+  }
+  .cta-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+  .cta-title span {
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink), var(--neon-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 30px rgba(0,255,255,0.3));
+  }
+  .cta-sub {
+    font-size: 1.1rem;
+    color: rgba(180,160,220,0.6);
+    letter-spacing: 2px;
+    margin-bottom: 50px;
+  }
+  .cta-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+
+  /* FOOTER */
+  footer {
+    position: relative; z-index: 2;
+    border-top: 1px solid rgba(0,255,255,0.1);
+    padding: 60px 0 40px;
+    background: rgba(0,0,0,0.3);
+  }
+  .footer-inner {
+    max-width: 1300px; margin: 0 auto; padding: 0 30px;
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px;
+  }
+  .footer-brand .logo { font-size: 1.2rem; margin-bottom: 16px; display: block; }
+  .footer-desc { font-size: 0.82rem; color: rgba(180,160,220,0.5); line-height: 1.7; max-width: 260px; }
+  .footer-col h4 {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    color: rgba(0,255,255,0.7);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col li { margin-bottom: 12px; }
+  .footer-col a {
+    font-size: 0.82rem;
+    color: rgba(180,160,220,0.5);
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: color 0.3s;
+  }
+  .footer-col a:hover { color: var(--neon-cyan); }
+  .footer-bottom {
+    max-width: 1300px; margin: 40px auto 0; padding: 20px 30px 0;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-bottom p {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: rgba(180,160,220,0.3);
+    letter-spacing: 2px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    .products-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-visual { display: none; }
+    .featured-inner { grid-template-columns: 1fr; }
+    .featured-visual { height: 350px; }
+    .process-grid { grid-template-columns: repeat(2, 1fr); }
+    .process-grid::before { display: none; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .products-grid { grid-template-columns: 1fr; }
+    .stats-inner { grid-template-columns: repeat(2, 1fr); }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .footer-inner { grid-template-columns: 1fr; gap: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<!-- STARS -->
+<canvas id="stars-canvas"></canvas>
+
+<!-- NEBULAS -->
+<div class="nebula nebula-1"></div>
+<div class="nebula nebula-2"></div>
+<div class="nebula nebula-3"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="logo">NEON GALAXY</div>
+    <ul class="nav-links">
+      <li><a href="#">Inicio</a></li>
+      <li><a href="#">Catálogo</a></li>
+      <li><a href="#">Personalizar</a></li>
+      <li><a href="#">Proyectos</a></li>
+      <li><a href="#">Contacto</a></li>
+    </ul>
+    <a href="#" class="nav-cta">Cotizar Ahora</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge">✦ COLECCIÓN INTERGALÁCTICA 2025 ✦</div>
+      <h1>
+        <span class="line1">ILUMINA</span>
+        <span class="line2">TU MUNDO</span>
+        <span class="line3">con luz neón del cosmos</span>
+      </h1>
+      <p class="hero-desc">
+        Letreros y decoraciones de neón de alta intensidad, diseñados para transformar cualquier espacio en una experiencia visual de otro planeta. Fabricados a medida, entregados al universo.
+      </p>
+      <div class="hero-buttons">
+        <a href="#" class="btn-primary">Explorar Catálogo</a>
+        <a href="#" class="btn-secondary">Diseño Personalizado</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO VISUAL -->
+  <div class="hero-visual">
+    <div class="orbit-ring ring-1">
+      <div class="orbit-dot orbit-dot-1" style="top:0;left:50%;"></div>
+    </div>
+    <div class="orbit-ring ring-2">
+      <div class="orbit-dot orbit-dot-2" style="top:0;left:50%;"></div>
+    </div>
+    <div class="orbit-ring ring-3">
+      <div class="orbit-dot orbit-dot-3" style="top:0;left:50%;"></div>
+    </div>
+    <div class="planet-core"></div>
+  </div>
+
+  <!-- SCROLL -->
+  <div class="scroll-hint">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-num">2,400+</div>
+      <div class="stat-label">Proyectos Entregados</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">50K+</div>
+      <div class="stat-label">Horas de Brillo</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Diseño Personalizado</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">24/7</div>
+      <div class="stat-label">Soporte Galáctico</div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<section class="products-section" id="catalogo">
+  <div class="container">
+    <div class="section-label">Catálogo</div>
+    <div class="section-title">
+      <span>Nuestras</span>
+      <em>Constelaciones</em>
+      <span style="font-size:0.5em;color:rgba(180,160,220,0.5);letter-spacing:5px;font-weight:400;">DE PRODUCTOS</span>
+    </div>
+    <div class="products-grid">
+
+      <div class="product-card card-1">
+        <div class="card-img">
+          <div class="card-bg-glow"></div>
+          <div class="neon-sign">OPEN</div>
+        </div>
+        <div class="card-body">
+          <div class="card-tag">★ Más Vendido</div>
+          <div class="card-title">Letrero OPEN Clásico</div>
+          <div class="card-desc">El ícono eterno. Perfecto para comercios, bares y restaurantes que quieren brillar toda la noche.</div>
+          <div class="card-footer">
+            <div class="card-price">$89.000<small>COP / desde</small></div>
+            <a href="#" class="card-btn">Ver más →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card card-2">
+        <div class="card-img">
+          <div class="card-bg-glow"></div>
+          <div class="neon-sign">♡ LOVE</div>
+        </div>
+        <div class="card-body">
+          <div class="card-tag">💫 Romántico</div>
+          <div class="card-title">Colección Amor & Pasión</div>
+          <div class="card-desc">Perfectos para bodas, eventos, habitaciones y cualquier espacio que necesite un toque especial.</div>
+          <div class="card-footer">
+            <div class="card-price">$120.000<small>COP / desde</small></div>
+            <a href="#" class="card-btn">Ver más →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card card-3">
+        <div class="card-img">
+          <div class="card-bg-glow"></div>
+          <div class="neon-sign">BAR</div>
+        </div>
+        <div class="card-body">
+          <div class="card-tag">🍸 Negocio</div>
+          <div class="card-title">Serie Bar & Nightclub</div>
+          <div class="card-desc">Diseños exclusivos para establecimientos nocturnos. Crea la atmósfera perfecta para tus clientes.</div>
+          <div class="card-footer">
+            <div class="card-price">$150.000<small>COP / desde</small></div>
+            <a href="#" class="card-btn">Ver más →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card card-4">
+        <div class="card-img">
+          <div class="card-bg-glow"></div>
+          <div class="neon-sign" style="font-size:1.5rem;">CUSTOM<br>DESIGN</div>
+        </div>
+        <div class="card-body">
+          <div class="card-tag">🎨 Tu Marca</div>
+          <div class="card-title">Logo & Marca Personal</div>
+          <div class="card-desc">Convertimos tu logo o firma en una pieza de arte neón. Ideal para oficinas y estudios.</div>
+          <div class="card-footer">
+            <div class="card-price">$200.000<small>COP / desde</small></div>
+            <a href="#" class="card-btn">Ver más →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card card-5">
+        <div class="card-img">
+          <div class="card-bg-glow"></div>
+          <div class="neon-sign">GAME</div>
+        </div>
+        <div class="card-body">
+          <div class="card-tag">🎮 Gaming</div>
+          <div class="card-title">Serie Gaming Room</div>
+          <div class="card-desc">Transforma tu espacio gamer en una cabina espacial. RGB Neón para el jugador extremo.</div>
+          <div class="card-footer">
+            <div class="card-price">$95.000<small>COP / desde</small></div>
+            <a href="#" class="card-btn">Ver más →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card card-6">
+        <div class="card-img">
+          <div class="card-bg-glow"></div>
+          <div class="neon-sign" style="font-size:1.8rem;">☽ LUNA</div>
+        </div>
+        <div class="card-body">
+          <div class="card-tag">🌙 Decoración</div>
+          <div class="card-title">Arte & Formas Cósmicas</div>
+          <div class="card-desc">Lunas, estrellas, planetas y formas del cosmos en neón. Arte para tu hogar o estudio.</div>
+          <div class="card-footer">
+            <div class="card-price">$110.000<small>COP / desde</small></div>
+            <a href="#" class="card-btn">Ver más →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <div class="marquee-item"><span>LED NEÓN PREMIUM</span><div class="dot dot-c"></div></div>
+    <div class="marquee-item"><span>DISEÑO PERSONALIZADO</span><div class="dot dot-p"></div></div>
+    <div class="marquee-item"><span>ENVÍO A TODO COLOMBIA</span><div class="dot dot-g"></div></div>
+    <div class="marquee-item"><span>GARANTÍA 2 AÑOS</span><div class="dot dot-c"></div></div>
+    <div class="marquee-item"><span>INSTALACIÓN INCLUIDA</span><div class="dot dot-p"></div></div>
+    <div class="marquee-item"><span>TECNOLOGÍA INTERGALÁCTICA</span><div class="dot dot-g"></div></div>
+    <div class="marquee-item"><span>LED NEÓN PREMIUM</span><div class="dot dot-c"></div></div>
+    <div class="marquee-item"><span>DISEÑO PERSONALIZADO</span><div class="dot dot-p"></div></div>
+    <div class="marquee-item"><span>ENVÍO A TODO COLOMBIA</span><div class="dot dot-g"></div></div>
+    <div class="marquee-item"><span>GARANTÍA 2 AÑOS</span><div class="dot dot-c"></div></div>
+    <div class="marquee-item"><span>INSTALACIÓN INCLUIDA</span><div class="dot dot-p"></div></div>
+    <div class="marquee-item"><span>TECNOLOGÍA INTERGALÁCTICA</span><div class="dot dot-g"></div></div>
+  </div>
+</div>
+
+<!-- FEATURED -->
+<section class="featured-section">
+  <div class="container">
+    <div class="featured-inner">
+      <div class="featured-visual">
+        <div class="neon-frame">
+          <div class="corner-deco tl"></div>
+          <div class="corner-deco tr"></div>
+          <div class="corner-deco bl"></div>
+          <div class="corner-deco br"></div>
+          <div class="big-neon-text">
+            <span class="w1">NEON</span>
+            <span class="w2">FLEX</span>
+          </div>
+        </div>
+      </div>
+      <div class="featured-content">
+        <div class="section-label">Tecnología</div>
+        <h2 class="featured-title">
+          <span>Neón LED de</span><br>
+          <em>Última Generación</em>
+        </h2>
+        <p class="featured-desc">
+          Nuestra tecnología Neon Flex LED combina la estética clásica del neón de gas con la eficiencia y durabilidad del LED moderno. El resultado: un brillo inigualable con el 80% menos de consumo energético.
+        </p>
+        <ul class="feature-list">
+          <li><div class="feature-icon"></div>Brillo uniforme en toda la longitud del tubo</li>
+          <li><div class="feature-icon"></div>Temperatura de operación fría — 100% seguro</li>
+          <li><div class="feature-icon"></div>Más de 50,000 horas de vida útil garantizadas</li>
+          <li><div class="feature-icon"></div>Resistente a la humedad — Apto para exteriores</li>
+          <li><div class="feature-icon"></div>Colores vibrantes sin decoloración UV</li>
+        </ul>
+        <a href="#" class="btn-primary">Ver Tecnología Completa</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process-section">
+  <div class="container">
+    <div class="section-label">Proceso</div>
+    <div class="section-title">
+      <span>Del Cosmos</span>
+      <em>a tu Espacio</em>
+    </div>
+    <div class="process-grid">
+      <div class="process-step step-1">
+        <div class="step-num">01 —</div>
+        <div class="step-icon">🎨</div>
+        <div class="step-title">Diseña</div>
+        <div class="step-desc">Comparte tu idea o elige de nuestro catálogo. Nuestros diseñadores crean el boceto perfecto.</div>
+      </div>
+      <div class="process-step step-2">
+        <div class="step-num">02 —</div>
+        <div class="step-icon">⚡</div>
+        <div class="step-title">Aprueba</div>
+        <div class="step-desc">Te enviamos una previsualización 3D antes de fabricar. Cero sorpresas, solo perfección.</div>
+      </div>
+      <div class="process-step step-3">
+        <div class="step-num">03 —</div>
+        <div class="step-icon">🔭</div>
+        <div class="step-title">Fabricamos</div>
+        <div class="step-desc">Producción artesanal con materiales de grado espacial. Cada pieza es única en el universo.</div>
+      </div>
+      <div class="process-step step-4">
+        <div class="step-num">04 —</div>
+        <div class="step-icon">🚀</div>
+        <div class="step-title">Entregamos</div>
+        <div class="step-desc">Envío asegurado a todo el territorio nacional. Instalación guiada paso a paso incluida.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
+  <div class="container">
+    <div class="section-label">Clientes</div>
+    <div class="section-title">
+      <span>Lo que Dice</span>
+      <em>la Galaxia</em>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <div class="testimonial-text">Pedí un letrero con el nombre de mi restaurante y quedé sin palabras. La calidad es brutal, los clientes siempre preguntan dónde lo conseguí. 100% recomendados.</div>
+        <div class="testimonial-author">
+          <div class="author-avatar av-1">CM</div>
+          <div>
+            <div class="author-name">Carlos Mendoza</div>
+            <div class="author-role">RESTAURANTE COSMOS · BOGOTÁ</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <div class="testimonial-text">Mi cuarto gamer se transformó completamente. El letrero de "PLAY" en neón cyan es exactamente lo que imaginé. El proceso fue rápido y el equipo súper atento.</div>
+        <div class="testimonial-author">
+          <div class="author-avatar av-2">SV</div>
+          <div>
+            <div class="author-name">Sara Valencia</div>
+            <div class="author-role">GAMER PROFESIONAL · MEDELLÍN</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <div class="testimonial-text">Usamos el letrero de Neon Galaxy para nuestra boda y fue el elemento más fotografiado de toda la noche. La gente seguía pidiendo fotos frente a él. ¡Maravilloso!</div>
+        <div class="testimonial-author">
+          <div class="author-avatar av-3">LR</div>
+          <div>
+            <div class="author-name">Laura Rodríguez</div>
+            <div class="author-role">EVENTO DE BODAS · CALI</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-title">
+      <span>¿LISTO PARA<br>BRILLAR?</span>
+    </div>
+    <p class="cta-sub">Diseño gratuito · Entrega en 10 días · Garantía 2 años</p>
+    <div class="cta-buttons">
+      <a href="#" class="btn-primary">Pedir Mi Neón Ahora</a>
+      <a href="#" class="btn-secondary">Hablar con un Experto</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="logo">NEON GALAXY</span>
+      <p class="footer-desc">Iluminamos sueños, negocios y espacios con la tecnología neón más avanzada del universo. Desde Medellín para toda Colombia.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Productos</h4>
+      <ul>
+        <li><a href="#">Letreros Comerciales</a></li>
+        <li><a href="#">Decoración Hogar</a></li>
+        <li><a href="#">Gaming Room</a></li>
+        <li><a href="#">Eventos & Bodas</a></li>
+        <li><a href="#">Diseño Custom</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Empresa</h4>
+      <ul>
+        <li><a href="#">Nosotros</a></li>
+        <li><a href="#">Proyectos</a></li>
+        <li><a href="#">Blog Cósmico</a></li>
+        <li><a href="#">Trabaja con Nosotros</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Soporte</h4>
+      <ul>
+        <li><a href="#">Cómo Ordenar</a></li>
+        <li><a href="#">Seguimiento</a></li>
+        <li><a href="#">Garantía</a></li>
+        <li><a href="#">Contacto</a></li>
+        <li><a href="#">WhatsApp</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 NEON GALAXY — TODOS LOS DERECHOS RESERVADOS DEL COSMOS</p>
+    <p>HECHO CON ✦ EN MEDELLÍN, COLOMBIA</p>
+  </div>
+</footer>
+
+<script>
+  // CURSOR
+  const cursor = document.getElementById('cursor');
+  const cursorDot = document.getElementById('cursorDot');
+  let mouseX = 0, mouseY = 0;
+  let dotX = 0, dotY = 0;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cursorDot.style.left = mouseX + 'px';
+    cursorDot.style.top = mouseY + 'px';
+  });
+
+  function animateCursor() {
+    dotX += (mouseX - dotX) * 0.15;
+    dotY += (mouseY - dotY) * 0.15;
+    cursor.style.left = dotX + 'px';
+    cursor.style.top = dotY + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'translate(-50%, -50%) scale(1.8)';
+      cursor.style.borderColor = 'var(--neon-pink)';
+      cursor.style.boxShadow = '0 0 20px var(--neon-pink)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+      cursor.style.borderColor = 'var(--neon-cyan)';
+      cursor.style.boxShadow = '0 0 15px var(--neon-cyan)';
+    });
+  });
+
+  // STARS
+  const canvas = document.getElementById('stars-canvas');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+  let shootingStars = [];
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  function createStars() {
+    stars = [];
+    for (let i = 0; i < 300; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.5 + 0.2,
+        alpha: Math.random(),
+        speed: Math.random() * 0.5 + 0.1,
+        twinkle: Math.random() * 0.02 + 0.005,
+        twinkleDir: Math.random() > 0.5 ? 1 : -1
+      });
+    }
+  }
+  createStars();
+
+  function createShootingStar() {
+    return {
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height * 0.5,
+      len: Math.random() * 120 + 60,
+      speed: Math.random() * 6 + 4,
+      angle: Math.PI / 4 + (Math.random() - 0.5) * 0.3,
+      alpha: 1,
+      color: ['#00ffff', '#ff00ff', '#00ff88', '#bf00ff'][Math.floor(Math.random() * 4)]
+    };
+  }
+
+  function drawStars() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Stars
+    stars.forEach(s => {
+      s.alpha += s.twinkle * s.twinkleDir;
+      if (s.alpha > 1) { s.alpha = 1; s.twinkleDir = -1; }
+      if (s.alpha < 0.1) { s.alpha = 0.1; s.twinkleDir = 1; }
+
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
+      ctx.fill();
+    });
+
+    // Shooting stars
+    shootingStars.forEach((ss, i) => {
+      const tailX = ss.x - Math.cos(ss.angle) * ss.len;
+      const tailY = ss.y - Math.sin(ss.angle) * ss.len;
+
+      const grad = ctx.createLinearGradient(tailX, tailY, ss.x, ss.y);
+      grad.addColorStop(0, 'rgba(0,0,0,0)');
+      grad.addColorStop(1, ss.color.replace(')', `,${ss.alpha})`).replace('rgb', 'rgba'));
+
+      ctx.beginPath();
+      ctx.moveTo(tailX, tailY);
+      ctx.lineTo(ss.x, ss.y);
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ss.x += Math.cos(ss.angle) * ss.speed;
+      ss.y += Math.sin(ss.angle) * ss.speed;
+      ss.alpha -= 0.015;
+
+      if (ss.alpha <= 0 || ss.x > canvas.width + 100 || ss.y > canvas.height + 100) {
+        shootingStars.splice(i, 1);
+      }
+    });
+
+    if (Math.random() < 0.008) {
+      shootingStars.push(createShootingStar());
+    }
+
+    requestAnimationFrame(drawStars);
+  }
+  drawStars();
+
+  // SCROLL ANIMATIONS
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.product-card, .process-step, .testimonial-card, .stat-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(30px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+
+  // STAGGER
+  document.querySelectorAll('.product-card').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.08}s`;
+  });
+  document.querySelectorAll('.process-step').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.12}s`;
+  });
+</script>
+</body>
+</html>

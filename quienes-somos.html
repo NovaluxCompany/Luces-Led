@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiénes Somos | Luces Led Medellín</title>
+    
+    <!-- Google Fonts --><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Iconos --><script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configuración (Misma que Home) --><script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#050505',
+                            dark: '#0a0a0a',
+                            pink: 'hsl(326.96, 100%, 72.94%)',
+                            pinkdim: 'hsl(326.96, 100%, 40%)',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        display: ['Orbitron', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'neon': '0 0 10px theme("colors.brand.pink"), 0 0 20px theme("colors.brand.pinkdim")',
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px)",
+                    },
+                    keyframes: {
+                        glitch: {
+                            '0%': { transform: 'translate(0)' },
+                            '20%': { transform: 'translate(-2px, 2px)' },
+                            '40%': { transform: 'translate(-2px, -2px)' },
+                            '60%': { transform: 'translate(2px, 2px)' },
+                            '80%': { transform: 'translate(2px, -2px)' },
+                            '100%': { transform: 'translate(0)' },
+                        },
+                        pulseBorder: {
+                            '0%, 100%': { borderColor: 'rgba(255, 255, 255, 0.1)' },
+                            '50%': { borderColor: 'hsl(326.96, 100%, 72.94%)' },
+                        }
+                    },
+                    animation: {
+                        glitch: 'glitch 0.5s infinite alternate',
+                        'slow-glitch': 'glitch 2s infinite alternate', // Una versión más lenta del glitch
+                        pulseBorder: 'pulseBorder 3s infinite ease-in-out',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            overflow-x: hidden;
+            background-image: var(--tw-bg-grid-pattern);
+            background-size: 50px 50px;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: hsl(326.96, 100%, 72.94%); border-radius: 4px; }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #ffffff, hsl(326.96, 100%, 72.94%));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            opacity: 0.1; /* Baja opacidad para que no opaque el contenido */
+        }
+
+        /* Estilo para el efecto de glitch en el texto */
+        .glitch-text {
+            position: relative;
+            animation: slow-glitch 4s infinite alternate; /* Animación más sutil */
+        }
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .glitch-text::before {
+            left: 2px;
+            text-shadow: -2px 0 theme('colors.blue.500');
+            background: #050505;
+            animation: glitch 0.7s infinite alternate-reverse;
+            clip: rect(44px, 450px, 56px, 0);
+        }
+        .glitch-text::after {
+            left: -2px;
+            text-shadow: -2px 0 theme('colors.brand.pink');
+            background: #050505;
+            animation: glitch 1s infinite alternate;
+            clip: rect(80px, 450px, 90px, 0);
+        }
+        /* Ajustar clips para pantallas más pequeñas si es necesario */
+        @media (max-width: 768px) {
+            .glitch-text::before { clip: rect(22px, 300px, 28px, 0); }
+            .glitch-text::after { clip: rect(40px, 300px, 45px, 0); }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-pink selection:text-black">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 transition-all duration-300 glass border-b-0 border-white/10" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex-shrink-0 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <span class="font-display font-bold text-2xl tracking-wider text-white">
+                        LUCES LED <span class="text-brand-pink drop-shadow-[0_0_5px_rgba(255,117,188,0.8)]">MED</span>
+                    </span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="index.html" class="hover:text-brand-pink transition-colors duration-300 text-sm font-medium tracking-wide">INICIO</a>
+                        <a href="productos.html" class="hover:text-brand-pink transition-colors duration-300 text-sm font-medium tracking-wide">PRODUCTOS</a>
+                        <a href="galeria.html" class="hover:text-brand-pink transition-colors duration-300 text-sm font-medium tracking-wide">GALERÍA</a>
+                        <a href="quienes-somos.html" class="hover:text-brand-pink transition-colors duration-300 text-sm font-medium tracking-wide">NOSOTROS</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Quiénes Somos - MEJORADO --><section class="min-h-screen flex items-center justify-center relative overflow-hidden pt-20 pb-16">
+        <!-- Video de Fondo (Abstracto Cyberpunk) --><video autoplay loop muted playsinline class="video-background">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-lines-in-the-dark-1478-large.mp4" type="video/mp4">
+            <!-- Si no carga el video, se puede usar una imagen de respaldo --><img src="https://images.unsplash.com/photo-1598460670005-59b48c660424?q=80&w=1920&auto=format&fit=crop" class="video-background" alt="Fondo abstracto de luces">
+        </video>
+        <!-- Capa de Gradiente para oscurecer el video y mejorar contraste --><div class="absolute inset-0 bg-gradient-to-b from-brand-black/80 via-brand-black/90 to-brand-black"></div>
+        
+        <div class="relative z-10 max-w-5xl mx-auto px-4 text-center">
+            <h1 class="text-5xl md:text-8xl font-display font-black mb-6 leading-tight">
+                <span class="glitch-text gradient-text" data-text="ARQUITECTOS DE LA LUZ">ARQUITECTOS DE LA LUZ</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto font-light leading-relaxed">
+                Somos <span class="text-brand-pink font-bold animate-pulse tracking-widest">Luces Led Medellín</span>. Fusionamos tecnología, diseño y pasión para crear <span class="font-bold">experiencias lumínicas</span> que redefinen tu espacio.
+            </p>
+            <div class="mt-8">
+                <a href="#nuestra-esencia" class="inline-flex items-center px-8 py-4 bg-brand-pink text-black font-display text-lg font-bold uppercase tracking-wider rounded-lg shadow-neon hover:scale-105 transition-all duration-300">
+                    Nuestra Historia <i data-lucide="arrow-down" class="w-5 h-5 ml-3"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección 1: Nuestra Misión y Origen --><section id="nuestra-esencia" class="py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-12 items-center">
+            
+            <!-- Texto (Orden 1 en móvil) --><div class="order-2 md:order-1">
+                <span class="text-brand-pink font-bold uppercase text-sm tracking-widest">NUESTRA ESENCIA</span>
+                <h3 class="text-4xl font-display font-bold mt-2 mb-6">
+                    Por qué nacimos en <span class="gradient-text">Medellín.</span>
+                </h3>
+                <p class="text-lg text-gray-400 mb-6">
+                    Luces Led Medellín nació de la visión de embellecer la ciudad de la Eterna Primavera, transformando la noche. Vimos el potencial de la tecnología LED para ir más allá de la simple iluminación: la convertimos en **diseño, emoción y eficiencia**.
+                </p>
+                <p class="text-gray-400 mb-6 border-l-4 border-brand-pink pl-4 italic">
+                    "No vendemos bombillos, vendemos la **experiencia** de un ambiente perfectamente iluminado, optimizando la energía y el estado de ánimo de nuestros clientes."
+                </p>
+                <div class="flex items-center space-x-3 text-brand-pink font-medium">
+                    <i data-lucide="check-circle" class="w-5 h-5"></i>
+                    <span>Especialistas en cintas y controladores RGB/RGBW</span>
+                </div>
+                <div class="flex items-center space-x-3 text-brand-pink font-medium mt-2">
+                    <i data-lucide="check-circle" class="w-5 h-5"></i>
+                    <span>Más de 8 años de experiencia en el sector local.</span>
+                </div>
+            </div>
+
+            <!-- Imagen (Orden 2 en móvil) --><div class="order-1 md:order-2">
+                <img src="https://placehold.co/800x600/0a0a0a/ff75bc?text=ILUMINACION+CIUDAD+DE+NOCHE" 
+                     onerror="this.onerror=null;this.src='https://placehold.co/800x600/0a0a0a/ff75bc?text=FOTO+DEL+EQUIPO';" 
+                     alt="Foto de la ciudad de Medellín de noche con luces LED" 
+                     class="rounded-xl shadow-neon w-full h-auto object-cover border border-brand-pink/50 animate-[pulseBorder_3s_infinite_ease-in-out]">
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección 2: Nuestros Valores (Tarjetas de Enfoque) --><section class="py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h3 class="text-center text-4xl font-display font-bold mb-12">
+                Nuestros <span class="text-brand-pink">Valores</span> Fundamentales
+            </h3>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                
+                <!-- Tarjeta 1: Diseño e Innovación --><div class="glass p-8 rounded-xl flex flex-col items-center text-center hover:shadow-neon transition-shadow">
+                    <i data-lucide="palette" class="w-10 h-10 text-brand-pink mb-4"></i>
+                    <h4 class="text-2xl font-display font-bold mb-3">Diseño Avanzado</h4>
+                    <p class="text-gray-400">
+                        No solo instalamos, diseñamos. Nuestro enfoque se centra en la integración arquitectónica, ocultando la fuente de luz para destacar solo el efecto lumínico.
+                    </p>
+                </div>
+
+                <!-- Tarjeta 2: Calidad y Garantía --><div class="glass p-8 rounded-xl flex flex-col items-center text-center hover:shadow-neon transition-shadow">
+                    <i data-lucide="shield-check" class="w-10 h-10 text-brand-pink mb-4"></i>
+                    <h4 class="text-2xl font-display font-bold mb-3">Compromiso 100%</h4>
+                    <p class="text-gray-400">
+                        Solo trabajamos con componentes de alta durabilidad y eficiencia energética. Cada instalación viene con una garantía completa en materiales y mano de obra.
+                    </p>
+                </div>
+
+                <!-- Tarjeta 3: Asesoría Personalizada --><div class="glass p-8 rounded-xl flex flex-col items-center text-center hover:shadow-neon transition-shadow">
+                    <i data-lucide="user-check" class="w-10 h-10 text-brand-pink mb-4"></i>
+                    <h4 class="text-2xl font-display font-bold mb-3">El Cliente, Primero</h4>
+                    <p class="text-gray-400">
+                        Desde el concepto inicial hasta el control remoto final, te acompañamos. Tu visión y presupuesto guían cada paso de nuestro proceso de instalación.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección 3: Cifras de Impacto (Estadísticas) --><section class="pb-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass p-12 rounded-xl border border-white/10 text-center">
+                <h3 class="text-4xl font-display font-bold mb-8">Luces Led Medellín en Números</h3>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                    <!-- Dato 1 --><div>
+                        <div class="text-6xl font-display font-black gradient-text mb-2">8+</div>
+                        <p class="text-gray-300 font-medium uppercase text-sm">Años de Experiencia</p>
+                    </div>
+                    <!-- Dato 2 --><div>
+                        <div class="text-6xl font-display font-black gradient-text mb-2">500+</div>
+                        <p class="text-gray-300 font-medium uppercase text-sm">Proyectos Finalizados</p>
+                    </div>
+                    <!-- Dato 3 --><div>
+                        <div class="text-6xl font-display font-black gradient-text mb-2">98%</div>
+                        <p class="text-gray-300 font-medium uppercase text-sm">Satisfacción del Cliente</p>
+                    </div>
+                    <!-- Dato 4 --><div>
+                        <div class="text-6xl font-display font-black gradient-text mb-2">10K+</div>
+                        <p class="text-gray-300 font-medium uppercase text-sm">Metros de LED Instalados</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Final --><section class="pb-24 text-center">
+        <a href="servicios.html#cotizar" class="px-10 py-5 bg-brand-pink text-black font-display text-xl font-bold uppercase tracking-wider hover:shadow-neon hover:scale-[1.05] transition-all duration-300 rounded-lg">
+            ¡Comienza tu Transformación Lumínica!
+        </a>
+    </section>
+
+    <!-- Footer Simple --><footer class="bg-black border-t border-white/10 py-8 text-center">
+        <p class="text-gray-600 text-sm">© 2024 Luces Led Medellín. Iluminando el futuro en el Valle de Aburrá.</p>
+    </footer>
+
+    <script>
+        // Inicializar iconos de Lucide
+        lucide.createIcons();
+    </script>
+</body>
+</html>

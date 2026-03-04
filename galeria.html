@@ -28,8 +28,8 @@
                         brand: {
                             black: '#050505',
                             dark: '#0a0a0a',
-                            pink: 'hsl(326.96, 100%, 72.94%)',
-                            pinkdim: 'hsl(326.96, 100%, 40%)',
+                            pink: '#e50e80',
+                            pinkdim: '#e50e80',
                         }
                     },
                     fontFamily: {
@@ -75,7 +75,7 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: hsl(326.96, 100%, 72.94%);
+            background: #e50e80;
             border-radius: 4px;
         }
 
@@ -100,7 +100,7 @@
 
         .bento-item:hover {
             transform: scale(1.02);
-            border-color: hsl(326.96, 100%, 72.94%);
+            border-color: #e50e80;
             box-shadow: 0 0 30px rgba(255, 117, 188, 0.2);
         }
 
@@ -316,7 +316,7 @@
 
     function createStars() {
         stars = [];
-        for (let i = 0; i < 300; i++) {
+        for (let i = 0; i < 120; i++) {
             stars.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,

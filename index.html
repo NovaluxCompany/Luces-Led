@@ -28,8 +28,8 @@
                         brand: {
                             black: '#050505',
                             dark: '#0a0a0a',
-                            pink: 'hsl(326.96, 100%, 72.94%)', // Color exacto de la marca
-                            pinkdim: 'hsl(326.96, 100%, 40%)',
+                            pink: '#e50e80', // Color exacto de la marca
+                            pinkdim: '#e50e80',
                         }
                     },
                     fontFamily: {
@@ -84,7 +84,7 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: hsl(326.96, 100%, 72.94%);
+            background: #e50e80;
             border-radius: 4px;
         }
 
@@ -97,7 +97,7 @@
         }
 
         .glass-card:hover {
-            border-color: hsl(326.96, 100%, 72.94%);
+            border-color: #e50e80;
             box-shadow: 0 0 20px rgba(255, 117, 188, 0.2);
             transform: translateY(-5px);
         }
@@ -109,7 +109,7 @@
 
         /* Texto con gradiente */
         .text-gradient {
-            background: linear-gradient(to right, #fff, hsl(326.96, 100%, 72.94%));
+            background: linear-gradient(to right, #fff, #e50e80);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -690,7 +690,7 @@
 
         function createStars() {
             stars = [];
-            for (let i = 0; i < 300; i++) {
+            for (let i = 0; i < 120; i++) {
                 stars.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
